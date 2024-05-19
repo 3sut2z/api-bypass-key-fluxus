@@ -3,29 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generate Key</title>
+<title></title>
 </head>
 <body>
 
 <script>
-function generateKey() {
-    // Tạo một key mới
-    var newKey = Math.random().toString(36).substr(2, 16);
-    
-    // Thời gian hiện tại
-    var currentTime = new Date().getTime() / 1000;
+function generateRandomKey() {
+    var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    var keyLength = 32; // Độ dài của key, bạn có thể thay đổi nếu cần
 
-    // Định dạng thời gian
-    var formattedTime = parseFloat(currentTime).toFixed(3);
+    var key = '';
+    for (var i = 0; i < keyLength; i++) {
+        var randomIndex = Math.floor(Math.random() * characters.length);
+        key += characters.charAt(randomIndex);
+    }
 
-    // Chuỗi JSON mới
-    var newResponse = {
-        "status": "success",
-        "key": newKey,
-        "time": formattedTime
-    };
-
-    return JSON.stringify(newResponse);
+    return key;
 }
 
 // Hàm xử lý yêu cầu
@@ -55,8 +48,13 @@ function handleRequest() {
     }
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
-    var newKeyResponse = generateKey();
-    return newKeyResponse;
+    var newKey = generateRandomKey();
+    var newResponse = {
+        "status": "success",
+        "key": newKey,
+        "time": new Date().getTime() / 1000 // Thời gian hiện tại
+    };
+    return JSON.stringify(newResponse);
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
