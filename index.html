@@ -8,8 +8,6 @@
 body {
     font-family: Arial, sans-serif; /* Font chữ mặc định */
     font-size: 10px; /* Kích thước font mặc định */
-    word-wrap: break-word;
-    white-space: pre-wrap;
 }
 
 .response {
@@ -54,7 +52,6 @@ function handleRequest() {
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
     var newKey = generateCustomKey(); // Tạo key mới
-    var newTime = 1; // Thời gian mới
     var newResponse = {
         "status": "success",
         "key": newKey,
