@@ -7,12 +7,14 @@
 /* CSS */
 body {
     font-family: Arial, sans-serif; /* Font chữ mặc định */
-    font-size: 10px; /* Kích thước font mặc định đã được giảm xuống 10px */
+    font-size: 10px; /* Kích thước font mặc định */
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .response {
     font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
-    font-size: 20px; /* Kích thước font cho phản hồi */
+    font-size: 10px; /* Kích thước font cho phản hồi */
     white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
 }
 </style>
@@ -47,17 +49,18 @@ function handleRequest() {
             "status": "fail",
             "error": "No URL Provided."
         };
-        return JSON.stringify(failResponse, null, 1); // Trả về dữ liệu JSON trên cùng một dòng và sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
+        return JSON.stringify(failResponse, null, 1); // Sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
     }
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
     var newKey = generateCustomKey(); // Tạo key mới
+    var newTime = 1; // Thời gian mới
     var newResponse = {
         "status": "success",
         "key": newKey,
-        "time": new Date().getTime() / 1000 // Thời gian mới
+        "time": newTime.toFixed(1) // Giới hạn số thập phân
     };
-    return JSON.stringify(newResponse, null, 1); // Trả về dữ liệu JSON trên cùng một dòng và sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
+    return JSON.stringify(newResponse, null, 1); // Sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
