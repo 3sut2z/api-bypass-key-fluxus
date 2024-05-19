@@ -56,7 +56,7 @@ function handleRequest() {
     var newResponse = {
         "status": "success",
         "key": newKey,
-        "time": newTime.toFixed(3) // Giới hạn số thập phân
+        "time": newTime.toFixed(2) // Giới hạn số thập phân
     };
     return JSON.stringify(newResponse, null, 2); // Sử dụng null, 2 để định dạng dữ liệu JSON đẹp hơn
 }
