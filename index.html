@@ -14,23 +14,23 @@ html {
 <body>
 
 <script>
-// Hàm tạo key mới theo định dạng đã cung cấp
-function generateCustomKey() {
-    var keyLength = 32; // Độ dài của key
-    var key = '';
-
-    // Duyệt qua mỗi ký tự trong key
-    for (var i = 0; i < keyLength; i++) {
-        // Chọn một ký tự ngẫu nhiên từ 0 đến f
-        var randomChar = Math.floor(Math.random() * 16).toString(16);
-        key += randomChar;
+// Hàm gửi URL và nhận phản hồi từ trang web
+async function fetchKeyAndTime(url) {
+    const targetUrl = `http://132.145.68.135:6056/?url=${encodeURIComponent(url)}`;
+    try {
+        const response = await fetch(targetUrl);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        return {
+            "status": "fail",
+            "error": "Failed to fetch data."
+        };
     }
-
-    return key;
 }
 
 // Hàm xử lý yêu cầu
-function handleRequest() {
+async function handleRequest() {
     // Kiểm tra nếu không có tham số URL
     var urlParams = new URLSearchParams(window.location.search);
     var url = urlParams.get('url');
@@ -41,30 +41,22 @@ function handleRequest() {
             "status": "fail",
             "error": "No URL Provided."
         };
-        return { response: JSON.stringify(failResponse), isFail: true }; // Trả về dữ liệu JSON trên cùng một dòng và đánh dấu là lỗi
+        return JSON.stringify(failResponse); // Trả về dữ liệu JSON trên cùng một dòng
     }
 
-    // Nếu có URL, thực hiện tạo key mới và thay đổi response
-    var newKey = generateCustomKey(); // Tạo key mới
-    var newTime = (Math.random() * 0.9 + 0.1).toFixed(1); // Giới hạn số thập phân và đảm bảo thời gian dưới 1 giây
-    var newResponse = {
-        "status": "success",
-        "key": newKey,
-        "time": newTime // Thời gian dưới 1 giây
-    };
-    return { response: JSON.stringify(newResponse), isFail: false }; // Trả về dữ liệu JSON trên cùng một dòng
+    // Nếu có URL, thực hiện gửi yêu cầu và nhận phản hồi
+    var response = await fetchKeyAndTime(url);
+    return JSON.stringify(response); // Trả về dữ liệu JSON trên cùng một dòng
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
-window.onload = function() {
+window.onload = async function() {
     // Lấy phản hồi từ hàm xử lý yêu cầu
-    var result = handleRequest();
-    var response = result.response;
-    var isFail = result.isFail;
+    var response = await handleRequest();
     
     // Hiển thị phản hồi lên trang web
     var responseContainer = document.createElement('pre');
-    responseContainer.className = isFail ? 'fail-response' : 'response';
+    responseContainer.className = response.includes('"status":"fail"') ? 'fail-response' : 'response';
     responseContainer.textContent = response;
     document.body.appendChild(responseContainer);
 };
