@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title></title>
 <style>
 /* CSS */
 body {
@@ -12,7 +11,7 @@ body {
 }
 
 .response {
-    font-family: monospace; /* Sử dụng font chữ monospace */
+    font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
     font-size: 14px; /* Kích thước font cho phản hồi */
     white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
 }
@@ -64,12 +63,13 @@ function handleRequest() {
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
     var newKey = generateCustomKey(); // Tạo key mới
+    var newTime = Math.random() / 10; // Tạo thời gian ngẫu nhiên dưới 0.x giây
     var newResponse = {
         "status": "success",
         "key": newKey,
-        "time": new Date().getTime() / 1000 // Thời gian hiện tại
+        "time": newTime.toFixed(3) // Giới hạn số thập phân
     };
-    return JSON.stringify(newResponse);
+    return JSON.stringify(newResponse, null, 2); // Sử dụng null, 2 để định dạng dữ liệu JSON đẹp hơn
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
