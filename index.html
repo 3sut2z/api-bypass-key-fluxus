@@ -38,20 +38,9 @@ function generateCustomKey() {
 // Hàm xử lý yêu cầu
 function handleRequest() {
     // Kiểm tra nếu không có tham số URL
-    if (!window.location.search) {
-        // Trả về response thất bại nếu không có URL
-        var failResponse = {
-            "status": "fail",
-            "error": "No URL Provided."
-        };
-        return JSON.stringify(failResponse);
-    }
-
-    // Lấy tham số URL
     var urlParams = new URLSearchParams(window.location.search);
     var url = urlParams.get('url');
 
-    // Kiểm tra xem URL có tồn tại không
     if (!url) {
         // Trả về response thất bại nếu không có URL
         var failResponse = {
