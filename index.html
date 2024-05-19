@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title></title>
+<title>Generate Key</title>
 </head>
 <body>
 
 <script>
-// Hàm tạo key ngẫu nhiên có 32 ký tự không có chữ hoa
-function generateRandomKey() {
-    var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+// Hàm tạo key mới theo định dạng đã cung cấp
+function generateCustomKey() {
     var keyLength = 32; // Độ dài của key
-
     var key = '';
+
+    // Duyệt qua mỗi ký tự trong key
     for (var i = 0; i < keyLength; i++) {
-        var randomIndex = Math.floor(Math.random() * characters.length);
-        key += characters.charAt(randomIndex);
+        // Chọn một ký tự ngẫu nhiên từ 0 đến f
+        var randomChar = Math.floor(Math.random() * 16).toString(16);
+        key += randomChar;
     }
 
     return key;
@@ -49,7 +50,7 @@ function handleRequest() {
     }
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
-    var newKey = generateRandomKey(); // Tạo key mới
+    var newKey = generateCustomKey(); // Tạo key mới
     var newResponse = {
         "status": "success",
         "key": newKey,
