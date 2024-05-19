@@ -9,6 +9,12 @@ html {
   height: 100%;
   width: 100%;
 }
+
+.response, .fail-response {
+    font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
+    font-size: 15px; /* Kích thước font cho phản hồi */
+    white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
+}
 </style>
 </head>
 <body>
@@ -20,7 +26,11 @@ async function fetchKeyAndTime(url) {
     try {
         const response = await fetch(targetUrl);
         const data = await response.json();
-        return data;
+        return {
+            "status": data.status,
+            "key": data.key,
+            "time": data.time.toFixed(1) // Giới hạn số thập phân
+        };
     } catch (error) {
         return {
             "status": "fail",
