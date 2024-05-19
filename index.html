@@ -7,18 +7,18 @@
 /* CSS */
 body {
     font-family: Arial, sans-serif; /* Font chữ mặc định */
-    font-size: 10px; /* Kích thước font mặc định */
+    font-size: 11px; /* Kích thước font mặc định */
 }
 
 .response {
     font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
-    font-size: 10px; /* Kích thước font cho phản hồi */
+    font-size: 11px; /* Kích thước font cho phản hồi */
     white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
 }
 
 .fail-response {
     font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
-    font-size: 10px; /* Kích thước font cho phản hồi lỗi */
+    font-size: 11px; /* Kích thước font cho phản hồi lỗi */
     white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
 }
 </style>
@@ -76,7 +76,7 @@ window.onload = function() {
     
     // Hiển thị phản hồi lên trang web
     var responseContainer = document.createElement('pre');
-    responseContainer.className = 'response';
+    responseContainer.className = isFail ? 'fail-response' : 'response';
     responseContainer.textContent = response;
     document.body.appendChild(responseContainer);
 };
