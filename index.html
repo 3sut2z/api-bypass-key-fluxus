@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generate Key</title>
+<title></title>
+<style>
+/* CSS */
+body {
+    font-family: Arial, sans-serif; /* Font chữ mặc định */
+    font-size: 16px; /* Kích thước font mặc định */
+}
+
+.response {
+    font-family: monospace; /* Sử dụng font chữ monospace */
+    font-size: 14px; /* Kích thước font cho phản hồi */
+    white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
+}
+</style>
 </head>
 <body>
 
@@ -65,7 +78,10 @@ window.onload = function() {
     var response = handleRequest();
     
     // Hiển thị phản hồi lên trang web
-    document.body.innerHTML = response;
+    var responseContainer = document.createElement('pre');
+    responseContainer.className = 'response';
+    responseContainer.textContent = response;
+    document.body.appendChild(responseContainer);
 };
 </script>
 
