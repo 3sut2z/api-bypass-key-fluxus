@@ -46,18 +46,19 @@ function handleRequest() {
         var failResponse = {
             "status": "fail",
             "error": "No URL Provided."
+            "time": newTime.toFixed(1) // Giới hạn số thập phân
         };
-        return JSON.stringify(failResponse, null, 1); // Sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
+        return JSON.stringify(failResponse); // Trả về dữ liệu JSON trên cùng một dòng
     }
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
     var newKey = generateCustomKey(); // Tạo key mới
     var newResponse = {
         "status": "success",
-        "key": newKey,
+        "key": newKey
         "time": newTime.toFixed(1) // Giới hạn số thập phân
     };
-    return JSON.stringify(newResponse, null, 1); // Sử dụng null, 1 để định dạng dữ liệu JSON đẹp hơn
+    return JSON.stringify(newResponse); // Trả về dữ liệu JSON trên cùng một dòng
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
