@@ -7,12 +7,18 @@
 /* CSS */
 body {
     font-family: Arial, sans-serif; /* Font chữ mặc định */
-    font-size: 16px; /* Kích thước font mặc định đã tăng lên 16px */
+    font-size: 16px; /* Kích thước font mặc định */
 }
 
 .response {
     font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
-    font-size: 16px; /* Kích thước font cho phản hồi đã tăng lên 16px */
+    font-size: 12px; /* Kích thước font cho phản hồi */
+    white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
+}
+
+.fail-response {
+    font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
+    font-size: 12px; /* Kích thước font lớn hơn cho phản hồi lỗi */
     white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
 }
 </style>
@@ -47,7 +53,7 @@ function handleRequest() {
             "status": "fail",
             "error": "No URL Provided."
         };
-        return JSON.stringify(failResponse); // Trả về dữ liệu JSON trên cùng một dòng
+        return { response: JSON.stringify(failResponse), isFail: true }; // Trả về dữ liệu JSON trên cùng một dòng và đánh dấu là lỗi
     }
 
     // Nếu có URL, thực hiện tạo key mới và thay đổi response
@@ -58,17 +64,19 @@ function handleRequest() {
         "key": newKey,
         "time": newTime // Thời gian dưới 1 giây
     };
-    return JSON.stringify(newResponse); // Trả về dữ liệu JSON trên cùng một dòng
+    return { response: JSON.stringify(newResponse), isFail: false }; // Trả về dữ liệu JSON trên cùng một dòng
 }
 
 // Thực hiện xử lý yêu cầu khi trang được tải
 window.onload = function() {
     // Lấy phản hồi từ hàm xử lý yêu cầu
-    var response = handleRequest();
+    var result = handleRequest();
+    var response = result.response;
+    var isFail = result.isFail;
     
     // Hiển thị phản hồi lên trang web
     var responseContainer = document.createElement('pre');
-    responseContainer.className = 'response';
+    responseContainer.className = isFail ? 'fail-response' : 'response';
     responseContainer.textContent = response;
     document.body.appendChild(responseContainer);
 };
