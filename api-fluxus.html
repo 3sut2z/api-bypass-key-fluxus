@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generate Key</title>
+</head>
+<body>
+
+<script>
+function generateKey() {
+    // Tạo một key mới
+    var newKey = Math.random().toString(36).substr(2, 16);
+    
+    // Thời gian hiện tại
+    var currentTime = new Date().getTime() / 1000;
+
+    // Định dạng thời gian
+    var formattedTime = parseFloat(currentTime).toFixed(3);
+
+    // Chuỗi JSON mới
+    var newResponse = {
+        "status": "success",
+        "key": newKey,
+        "time": formattedTime
+    };
+
+    return JSON.stringify(newResponse);
+}
+
+// Hàm xử lý yêu cầu
+function handleRequest() {
+    // Kiểm tra nếu không có tham số URL
+    if (!window.location.search) {
+        // Trả về response thất bại nếu không có URL
+        var failResponse = {
+            "status": "fail",
+            "error": "No URL Provided."
+        };
+        return JSON.stringify(failResponse);
+    }
+
+    // Lấy tham số URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var url = urlParams.get('url');
+
+    // Kiểm tra xem URL có tồn tại không
+    if (!url) {
+        // Trả về response thất bại nếu không có URL
+        var failResponse = {
+            "status": "fail",
+            "error": "No URL Provided."
+        };
+        return JSON.stringify(failResponse);
+    }
+
+    // Nếu có URL, thực hiện tạo key mới và thay đổi response
+    var newKeyResponse = generateKey();
+    return newKeyResponse;
+}
+
+// Thực hiện xử lý yêu cầu khi trang được tải
+window.onload = function() {
+    // Lấy phản hồi từ hàm xử lý yêu cầu
+    var response = handleRequest();
+    
+    // Hiển thị phản hồi lên trang web
+    document.body.innerHTML = response;
+};
+</script>
+
+</body>
+</html>
