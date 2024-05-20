@@ -9,64 +9,62 @@ html {
   height: 100%;
   width: 100%;
 }
-
-.response, .fail-response {
-    font-family: Arial, sans-serif; /* Sử dụng font chữ của trang web */
-    font-size: 15px; /* Kích thước font cho phản hồi */
-    white-space: pre; /* Đảm bảo giữ nguyên định dạng của dữ liệu JSON */
-}
 </style>
 </head>
 <body>
 
 <script>
-// Hàm gửi URL và nhận phản hồi từ trang web
-async function fetchKeyAndTime(url) {
-    const targetUrl = `http://132.145.68.135:6056/?url=${encodeURIComponent(url)}`;
-    try {
-        const response = await fetch(targetUrl);
-        const data = await response.json();
-        return {
-            "status": data.status,
-            "key": data.key,
-            "time": data.time.toFixed(1) // Giới hạn số thập phân
-        };
-    } catch (error) {
-        return {
-            "status": "fail",
-            "error": "Failed to fetch data."
-        };
+// Function to generate a new key according to the provided format
+function generateCustomKey() {
+    var keyLength = 32; // Length of the key
+    var key = '';
+
+    // Iterate through each character in the key
+    for (var i = 0; i < keyLength; i++) {
+        // Select a random character from 0 to f
+        var randomChar = Math.floor(Math.random() * 16).toString(16);
+        key += randomChar;
     }
+
+    return key;
 }
 
-// Hàm xử lý yêu cầu
-async function handleRequest() {
-    // Kiểm tra nếu không có tham số URL
+// Function to handle the request
+function handleRequest() {
+    // Check if there are no URL parameters
     var urlParams = new URLSearchParams(window.location.search);
     var url = urlParams.get('url');
 
     if (!url) {
-        // Trả về response thất bại nếu không có URL
+        // Return a fail response if there is no URL
         var failResponse = {
             "status": "fail",
             "error": "No URL Provided."
         };
-        return JSON.stringify(failResponse); // Trả về dữ liệu JSON trên cùng một dòng
+        return { response: JSON.stringify(failResponse), isFail: true }; // Return JSON data in one line and mark it as an error
     }
 
-    // Nếu có URL, thực hiện gửi yêu cầu và nhận phản hồi
-    var response = await fetchKeyAndTime(url);
-    return JSON.stringify(response); // Trả về dữ liệu JSON trên cùng một dòng
+    // If there is a URL, generate a new key and change the response
+    var newKey = generateCustomKey(); // Generate a new key
+    var newTime = (Math.random() * 0.9 + 0.1).toFixed(1); // Limit decimal places and ensure time is under 1 second
+    var newResponse = {
+        "status": "success",
+        "key": newKey,
+        "time": newTime // Time under 1 second
+    };
+    return { response: JSON.stringify(newResponse), isFail: false }; // Return JSON data in one line
 }
 
-// Thực hiện xử lý yêu cầu khi trang được tải
-window.onload = async function() {
-    // Lấy phản hồi từ hàm xử lý yêu cầu
-    var response = await handleRequest();
+// Handle the request when the page loads
+window.onload = function() {
+    // Get the response from the handleRequest function
+    var result = handleRequest();
+    var response = result.response;
+    var isFail = result.isFail;
     
-    // Hiển thị phản hồi lên trang web
+    // Display the response on the web page
     var responseContainer = document.createElement('pre');
-    responseContainer.className = response.includes('"status":"fail"') ? 'fail-response' : 'response';
+    responseContainer.className = isFail ? 'fail-response' : 'response';
     responseContainer.textContent = response;
     document.body.appendChild(responseContainer);
 };
