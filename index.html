@@ -14,55 +14,63 @@ html {
 <body>
 
 <script>
-// Function to generate a new key according to the provided format
-function generateCustomKey() {
-    var keyLength = 32; // Length of the key
-    var key = '';
+async function getfluxuskey(link) {
+    try {
+        const response = await fetch(`https://132.145.68.135:6056/?url=${link}`);
+        const json = await response.json();
 
-    // Iterate through each character in the key
-    for (var i = 0; i < keyLength; i++) {
-        // Select a random character from 0 to f
-        var randomChar = Math.floor(Math.random() * 16).toString(16);
-        key += randomChar;
+        if (json.status === "success") {
+            return json.key;
+        } else {
+            throw new Error('Failed to retrieve key');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
     }
-
-    return key;
 }
 
-// Function to handle the request
-function handleRequest() {
-    // Check if there are no URL parameters
+async function handleRequest() {
     var urlParams = new URLSearchParams(window.location.search);
     var url = urlParams.get('url');
 
     if (!url) {
-        // Return a fail response if there is no URL
         var failResponse = {
             "status": "fail",
             "error": "No URL Provided."
         };
-        return { response: JSON.stringify(failResponse), isFail: true }; // Return JSON data in one line and mark it as an error
+        return { response: JSON.stringify(failResponse), isFail: true };
     }
 
-    // If there is a URL, generate a new key and change the response
-    var newKey = generateCustomKey(); // Generate a new key
-    var newTime = (Math.random() * 0.9 + 0.1).toFixed(1); // Limit decimal places and ensure time is under 1 second
-    var newResponse = {
-        "status": "success",
-        "key": newKey,
-        "time": newTime // Time under 1 second
-    };
-    return { response: JSON.stringify(newResponse), isFail: false }; // Return JSON data in one line
+    if (url.startsWith("https://flux.li/android/external/start.php?HWID=")) {
+        var key = await getfluxuskey(url);
+        if (key) {
+            var response = {
+                "status": "success",
+                "key": key,
+            };
+            return { response: JSON.stringify(response), isFail: false };
+        } else {
+            var failResponse = {
+                "status": "fail",
+                "error": "Unable to retrieve key."
+            };
+            return { response: JSON.stringify(failResponse), isFail: true };
+        }
+    } else {
+        var failResponse = {
+            "status": "fail",
+            "error": "Invalid URL."
+        };
+        return { response: JSON.stringify(failResponse), isFail: true };
+    }
 }
 
-// Handle the request when the page loads
-window.onload = function() {
-    // Get the response from the handleRequest function
-    var result = handleRequest();
+window.onload = async function() {
+    var result = await handleRequest();
     var response = result.response;
     var isFail = result.isFail;
     
-    // Display the response on the web page
     var responseContainer = document.createElement('pre');
     responseContainer.className = isFail ? 'fail-response' : 'response';
     responseContainer.textContent = response;
